@@ -1,0 +1,49 @@
+---
+title: "Test"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Oh Hai Jade
+
+Hallo.
+
+# Loading libraries
+
+Only using tidyverse!
+
+```{r libraries}
+library(tidyverse)
+```
+
+# Loading data
+
+Using some tidy tuesday data
+
+```{r pressure, echo=FALSE}
+brewing_materials_raw <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-31/brewing_materials.csv")
+```
+
+# Plotting the use of materials over time
+
+Basic dpylr/ggplot2 stuff.
+
+```{r}
+brewing_filtered <- brewing_materials_raw %>%
+  filter(type %in% c( "Malt and malt products",
+                      "Sugar and syrups",
+                      "Hops (dry)"),
+         year < 2016,
+         !(month == 12 & year %in% 2014:2015)) %>% 
+  mutate(date = paste0(year, "-", month, "-01" ),
+         date = lubridate::ymd(date)) 
+
+brewing_filtered %>%ggplot(aes(date, 
+             month_current,
+             colour = type))+
+  geom_point()
+```
+
